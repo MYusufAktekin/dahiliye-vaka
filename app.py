@@ -140,11 +140,12 @@ with col_left:
     </div>
     """, unsafe_allow_html=True)
     
+    # --- DÜZELTME BURADA YAPILDI: DOSYA ADI SADELEŞTİRİLDİ ---
     if st.button("Vakayı Çözmeye Başla →"):
-        st.switch_page("pages/1_📅_16_Subat_Vakasi.py")
+        st.switch_page("pages/1_Vaka_Analizi.py")
 
 with col_right:
-    # --- EĞİTİM MATERYALLERİ NAVİGASYON ---
+    # --- EĞİTİM MATERYALLERİ ---
     st.markdown('<div class="section-label"><span>📚</span> EĞİTİM MATERYALLERİMİZ</div>', unsafe_allow_html=True)
     st.markdown("""
     <div class="elite-card" style="padding: 35px; text-align: center;">
@@ -154,8 +155,9 @@ with col_right:
     </div>
     """, unsafe_allow_html=True)
     
+    # --- DÜZELTME BURADA YAPILDI: DOSYA ADI SADELEŞTİRİLDİ ---
     if st.button("Arşive Git →"):
-        st.switch_page("pages/2_📚_Egitim_Materyalleri.py")
+        st.switch_page("pages/2_Egitim_Materyalleri.py")
 
 
 # --- 6. ÖZEL TAKVİM ALANI ---
