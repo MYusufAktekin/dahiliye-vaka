@@ -3,7 +3,20 @@ import base64
 import os
 import calendar
 from datetime import datetime
+import streamlit as st
+import os
 
+# --- AJAN KOD BAŞLANGICI ---
+st.write("📂 ŞU ANKİ KLASÖR:", os.getcwd())
+st.write("📄 ANA DİZİNDEKİ DOSYALAR:", os.listdir('.'))
+
+if os.path.exists('pages'):
+    st.write("📂 PAGES KLASÖRÜNÜN İÇİ:", os.listdir('pages'))
+else:
+    st.error("🚨 DİKKAT: 'pages' adında bir klasör bulunamadı! Klasör adı 'Pages' (büyük P) olabilir mi?")
+# --- AJAN KOD BİTİŞİ ---
+
+# ... Kodun geri kalanı aşağıdan devam etsin ...
 # --- 1. YARDIMCI FONKSİYONLAR ---
 def get_base64_of_bin_file(bin_file):
     if os.path.exists(bin_file):
