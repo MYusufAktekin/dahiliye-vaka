@@ -140,9 +140,9 @@ with col_left:
     </div>
     """, unsafe_allow_html=True)
     
-    # --- DÜZELTME BURADA YAPILDI: DOSYA ADI SADELEŞTİRİLDİ ---
+    # --- YENİ KISA DOSYA ADI KULLANILDI ---
     if st.button("Vakayı Çözmeye Başla →"):
-        st.switch_page("pages/1_Vaka_Analizi.py")
+        st.switch_page("pages/1_vaka.py")
 
 with col_right:
     # --- EĞİTİM MATERYALLERİ ---
@@ -155,9 +155,9 @@ with col_right:
     </div>
     """, unsafe_allow_html=True)
     
-    # --- DÜZELTME BURADA YAPILDI: DOSYA ADI SADELEŞTİRİLDİ ---
+    # --- YENİ KISA DOSYA ADI KULLANILDI ---
     if st.button("Arşive Git →"):
-        st.switch_page("pages/2_Egitim_Materyalleri.py")
+        st.switch_page("pages/2_materyal.py")
 
 
 # --- 6. ÖZEL TAKVİM ALANI ---
