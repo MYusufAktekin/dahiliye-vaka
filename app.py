@@ -140,8 +140,8 @@ with col_left:
     </div>
     """, unsafe_allow_html=True)
     
-    # --- YENİ KISA DOSYA ADI KULLANILDI ---
     if st.button("Vakayı Çözmeye Başla →"):
+        # Dosyalar artık pages klasöründe olduğu için bu çalışacak
         st.switch_page("pages/1_vaka.py")
 
 with col_right:
@@ -155,8 +155,8 @@ with col_right:
     </div>
     """, unsafe_allow_html=True)
     
-    # --- YENİ KISA DOSYA ADI KULLANILDI ---
     if st.button("Arşive Git →"):
+        # Dosyalar artık pages klasöründe olduğu için bu çalışacak
         st.switch_page("pages/2_materyal.py")
 
 
