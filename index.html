@@ -1,25 +1,249 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <title>Ankara Tıp Dahiliye Vaka</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.50.0/build/stlite.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İnteraktif Vaka: 18 Yaş Kadın Hasta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Bricolage+Grotesque:wght@800&display=swap" rel="stylesheet">
+    <style>
+        body { background: #fcfcfd; font-family: 'Outfit', sans-serif; padding: 2rem; color: #1a1a1a; max-width: 900px; margin: auto; line-height: 1.6; }
+        
+        /* Header & Skor Barı */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .hero-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 2.2rem; color: #1a1a1a; margin: 0; }
+        .score-box { background: #8A1538; color: white; padding: 10px 20px; border-radius: 12px; font-weight: 800; font-size: 1.2rem; box-shadow: 0 4px 10px rgba(138,21,56,0.2); }
+        .caption { color: #888; font-size: 0.9rem; margin-bottom: 20px; }
+        
+        /* İlerleme Çubuğu */
+        .progress-container { width: 100%; background-color: #eee; border-radius: 8px; margin-bottom: 30px; height: 10px; overflow: hidden; }
+        .progress-bar { height: 100%; background-color: #8A1538; width: 25%; transition: width 0.5s ease-in-out; }
+
+        .section-header { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.4rem; color: white; background: #1a1a1a; display: inline-block; padding: 8px 16px; border-radius: 8px; margin-top: 20px; margin-bottom: 15px; }
+        
+        /* Kartlar ve Kurgu */
+        .story-card { background: white; padding: 25px; border-radius: 16px; border: 1px solid #eaeaea; box-shadow: 0 10px 30px rgba(0,0,0,0.03); margin-bottom: 20px; }
+        .doctor-reasoning { background: #fdf2f5; padding: 20px; border-radius: 12px; border-left: 5px solid #8A1538; margin-top: 15px; font-style: italic; color: #444; }
+        .doctor-reasoning-title { font-weight: 800; color: #8A1538; font-size: 0.9rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
+        
+        /* Tablo */
+        .lab-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; margin: 15px 0; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #eee; }
+        .lab-table td, .lab-table th { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+        .lab-table th { background: #f8f9fa; color: #666; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        .abnormal { color: #d9534f; font-weight: 800; background: #fff3f3; }
+        
+        /* Soru Alanı */
+        .question-box { margin-top: 20px; padding: 25px; border: 2px dashed #8A1538; border-radius: 16px; background: #fffbfb; }
+        .question-title { font-size: 1.2rem; font-weight: 700; color: #1a1a1a; margin-bottom: 15px; }
+        .radio-group label { display: block; margin-bottom: 12px; cursor: pointer; padding: 12px; border: 1px solid #ddd; border-radius: 8px; transition: 0.2s; background: white; }
+        .radio-group label:hover { border-color: #8A1538; background: #fdf2f5; }
+        input[type="radio"] { margin-right: 10px; accent-color: #8A1538; }
+        select { padding: 12px; width: 100%; border-radius: 8px; border: 1px solid #ccc; font-family: 'Outfit'; font-size: 1rem; margin-bottom: 15px; }
+        
+        button { background: #8A1538; color: white; border-radius: 8px; padding: 12px 28px; font-weight: 700; border: none; cursor: pointer; font-family: 'Outfit'; font-size: 1rem; transition: 0.3s; box-shadow: 0 4px 15px rgba(138,21,56,0.2); }
+        button:hover { background: #1a1a1a; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+        
+        /* Animasyonlar ve Durumlar */
+        .hidden { display: none; }
+        .fade-in { animation: fadeIn 0.6s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .success { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 15px; border-radius: 8px; margin-top: 15px; display: flex; align-items: flex-start; gap: 10px; }
+        .error { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; border-radius: 8px; margin-top: 15px; display: flex; align-items: flex-start; gap: 10px; }
+        
+        .final-badge { text-align: center; font-size: 4rem; margin: 20px 0; }
+    </style>
 </head>
 <body>
-  <div id="root"></div>
-  <script src="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.50.0/build/stlite.js"></script>
-  <script>
-    stlite.mount({
-      requirements: ["streamlit", "pandas", "numpy"], // Gerekirse buraya ekleme yap
-      entrypoint: "app.py",
-      files: {
-        "app.py": {
-          url: "./app.py", // GitHub'daki app.py dosyanı buradan okuyacak
-        },
-      },
-    }, document.getElementById("root"));
-  </script>
+
+    <div style="margin-bottom: 12px;">
+        <a href="bolum2.html" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:#1a5276; font-weight:700; font-size:0.9rem; padding:8px 16px; border:2px solid #1a5276; border-radius:8px; transition:0.2s; font-family:'Outfit',sans-serif;"
+           onmouseover="this.style.background='#1a5276'; this.style.color='white';"
+           onmouseout="this.style.background=''; this.style.color='#1a5276';">
+           📘 Bölüm 2: Yorgunluk, Kararma ve Kriz (Addison) →
+        </a>
+    </div>
+
+    <div class="top-bar">
+        <div>
+            <h1 class="hero-title">Vaka 1: Genç Kadında Hipertansif Kriz</h1>
+            <div class="caption">AUTF İç Hastalıkları İnteraktif Eğitim Modülü</div>
+        </div>
+        <div class="score-box">Skor: <span id="scoreDisplay">100</span></div>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div id="stage0" class="fade-in">
+        <div class="section-header">Bölüm 1: Acil Servise Geliş</div>
+        
+        <div class="story-card">
+            <p><strong>Mevcut Şikayet:</strong> Acil servise ilaçlara yanıtsız, "ezici" tarzda baş ağrısı, bulantı ve fotofobi ile başvuran 18 yaşında kadın hasta.</p>
+            <p><strong>Dış Merkez Öyküsü:</strong> Yakın zamanda dış merkez nöroloji polikliniğinde KB: 164/100 mmHg ölçülmüş. Göz dibinde <b>Papilödem</b> saptanarak Lomber Ponksiyon yapılmış. Açılış basıncı 36 cmH2O bulunarak <b>İdiyopatik İntrakraniyal Hipertansiyon (Psödotümör Serebri)</b> tanısı konmuş ve Asetazolamid başlanmış.</p>
+            <p><strong>Şu Anki Fizik Muayene:</strong><br>
+            🚨 <b>KB:</b> 207/143 mmHg<br>
+            🫁 <b>Akciğer:</b> Bazallerde raller. Grafide perihiler dolgunluk (Pulmoner Ödem).<br>
+            🫀 <b>EKG:</b> Sinüs taşikardisi, LVH bulguları.</p>
+        </div>
+
+        <div class="doctor-reasoning">
+            <div class="doctor-reasoning-title">🩺 Dr. Konukman'ın Vizit Notu</div>
+            "Arkadaşlar, bu hasta daha önce IIH tanısı almış ama tablo çok hızlı değişmiş. 18 yaşında bir hastada diyastolik tansiyonun 140'lara çıkması ve <b>Uç Organ Hasarı</b> (Papilödem, Pulmoner Ödem) gelişmesi alarm vericidir. Papilödem, IIH'den ziyade Malign Hipertansiyonun bizzat kendi sonucu olabilir."
+        </div>
+
+        <div class="question-box">
+            <div class="question-title">❓ Soru 1: Ayırıcı Tanı</div>
+            <p>18 yaşında malign hipertansiyon ve organ hasarı ile gelen bu hastada, etiyolojide <b>ilk planda</b> dışlanması gereken ana hastalık grubu hangisidir?</p>
+            <div class="radio-group">
+                <label><input type="radio" name="q1" value="A"> A) Psikojenik Polidipsi ve Elektrolit İmbalansı</label>
+                <label><input type="radio" name="q1" value="B"> B) Renal Parankimal Hastalıklar ve Renovasküler Nedenler</label>
+                <label><input type="radio" name="q1" value="C"> C) İdiyopatik Esansiyel Hipertansiyon</label>
+            </div>
+            <button onclick="checkQ1()">Karar Ver</button>
+            <div id="msg1"></div>
+        </div>
+    </div>
+
+    <div id="stage1" class="hidden fade-in">
+        <div class="section-header">Bölüm 2: Laboratuvar ve İpuçları</div>
+        
+        <div class="story-card">
+            <p>Tedaviyle hastanın kan basıncı kontrol altına alındı. İstediğiniz tetkik sonuçları sisteme düştü:</p>
+            <table class="lab-table">
+                <tr><th>Test</th><th>Sonuç</th><th>Referans</th></tr>
+                <tr><td>Kreatinin</td><td>1.19 mg/dL</td><td>0.5-1.5</td></tr>
+                <tr><td>Sodyum (Na)</td><td>132 mmol/L</td><td>135-145</td></tr>
+                <tr><td class="abnormal">Potasyum (K)</td><td class="abnormal">2.0 mmol/L (KRİTİK DÜŞÜK)</td><td>3.4-5.0</td></tr>
+                <tr><td>İdrar</td><td>Protein (2+)</td><td>Negatif</td></tr>
+            </table>
+        </div>
+
+        <div class="doctor-reasoning">
+            <div class="doctor-reasoning-title">💡 Konsültasyon (Dr. Konukman)</div>
+            "Dikkat! Diüretik kullanmayan bir hastada <b>Şiddetli Hipokalemi (2.0)</b> ve Hipertansiyon birlikteliği gördüğümüzde aksi ispat edilene kadar <b>Mineralokortikoid Fazlalığı (RAAS aktivasyonu)</b> düşünmeliyiz. Tablomuz daralıyor."
+        </div>
+
+        <div class="question-box">
+            <div class="question-title">❓ Soru 2: İleri Tetkik</div>
+            <p>Bu hipokalemik hipertansiyon tablosunda, RAAS aksını değerlendirmek için isteyeceğiniz <b>en kritik ilk test</b> aşağıdakilerden hangisidir?</p>
+            <select id="q2">
+                <option value="">-- Tetkik Seçin --</option>
+                <option value="A">24 Saatlik İdrar Metanefrinleri</option>
+                <option value="B">Plazma Renin Aktivitesi ve Aldosteron Konsantrasyonu</option>
+                <option value="C">Böbrek Biyopsisi</option>
+            </select>
+            <br>
+            <button onclick="checkQ2()">Laboratuvara Gönder</button>
+            <div id="msg2"></div>
+        </div>
+    </div>
+
+    <div id="stage3" class="hidden fade-in">
+        <div class="section-header">Bölüm 3: Radyoloji ve Kesin Tanı</div>
+        
+        <div class="story-card" style="border-left: 5px solid #28a745;">
+            <p><b>Hormon Profili Sonuçları:</b></p>
+            <ul style="margin-top:0;">
+                <li><b>Plazma Renin Aktivitesi:</b> 150 ng/mL/saat <i>(Normal: 1.2-2.4) -> ÇOK YÜKSEK</i></li>
+                <li><b>Plazma Aldosteron:</b> 4.1 ng/dL <i>(Normal: <21) -> NORMAL/DÜŞÜK</i></li>
+            </ul>
+            <p><b>Radyoloji (BT Anjiyo ve MR):</b> Bilateral renal arterler tamamen AÇIK (Fibromusküler Displazi görünümü yok). Ancak sol böbrek interpolar bölgede <b>8 mm çapında kistik komponenti olan lezyon</b> izlendi.</p>
+        </div>
+
+        <div class="doctor-reasoning">
+            <div class="doctor-reasoning-title">🔍 Vaka Sentezi</div>
+            Renin çok yüksek olduğu için primer hiperaldosteronizm (Conn) ekarte edildi. Renal arterler açık olduğuna göre darlığa bağlı sekonder hipertansiyon da değil. Elimizde, şiddetli hipokalemiye rağmen aldosteronu baskılamış, bağımsız olarak <b>aşırı Renin salgılayan bir kitle</b> var.
+        </div>
+
+        <div class="question-box">
+            <div class="question-title">❓ Soru 3: Final Kararı</div>
+            <p>Tüm bu veriler ışığında en olası tanı nedir?</p>
+            <div class="radio-group">
+                <label><input type="radio" name="q3" value="A"> A) Feokromositoma</label>
+                <label><input type="radio" name="q3" value="B"> B) Renal Hücreli Karsinom (RCC)</label>
+                <label><input type="radio" name="q3" value="C"> C) Reninoma (Jukstaglomerüler Hücreli Tümör)</label>
+            </div>
+            <button onclick="checkQ3()">Tanıyı Koy ve Ameliyata Ver</button>
+            <div id="msg3"></div>
+        </div>
+    </div>
+
+    <div id="stage4" class="hidden fade-in">
+        <div class="final-badge">🏆</div>
+        <div class="section-header" style="background: #28a745; display: block; text-align: center;">Vaka Çözüldü!</div>
+        
+        <div class="story-card">
+            <h3>🧬 Patoloji Raporu: Reninoma</h3>
+            <p>Hasta robotik parsiyel nefrektomiye alındı. Tümör çıkarıldı.</p>
+            <p><b>İmmünohistokimya:</b> CD34 (+), GATA3 (+) ve <b>Renin (+)</b>.<br>
+            <b>Elektron Mikroskopi:</b> Karakteristik eşkenar dörtgen şeklinde (rhomboid) Renin kristalleri görüldü.</p>
+            
+            <hr>
+            <h4>🧠 Başlangıçtaki "Sahte" IIH Tanısı Nasıl Açıklanır?</h4>
+            <p>Tümör çıkarıldıktan sonra hastanın tansiyonu tamamen normale döndü ve potasyum ihtiyacı kalmadı. Görme alanı defektleri ve papilödem düzeldi.</p>
+            <p><i>Klinik İnci:</i> Yüksek Renin -> Yüksek Anjiyotensin II yaratır. Anjiyotensin II'nin koroid pleksus üzerinde aldosteron benzeri etki göstererek BOS yapımını artırdığı ve bu hastada <b>Psödotümör Serebri (IIH)</b> benzeri tabloyu tetiklediği düşünülmüştür.</p>
+        </div>
+        
+        <div style="text-align: center;">
+            <p style="font-size: 1.2rem; font-weight: bold;">Final Skorunuz: <span id="finalScoreDisplay" style="color:#8A1538;"></span> / 100</p>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 15px;">
+                <button onclick="location.reload()" style="background: #1a1a1a;">Vakayı Yeniden Başlat</button>
+                <a href="bolum2.html" style="text-decoration:none;"><button style="background: #1a5276;">Bölüm 2'ye Geç: Addison Hastalığı →</button></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let score = 100;
+
+        function updateScore(penalty) {
+            score -= penalty;
+            if(score < 0) score = 0;
+            document.getElementById("scoreDisplay").innerText = score;
+        }
+
+        function checkQ1() {
+            let val = document.querySelector('input[name="q1"]:checked');
+            let msg = document.getElementById("msg1");
+            if(val && val.value === "B") {
+                msg.innerHTML = `<div class="success">✅ <b>Harika başlangıç!</b> Genç hastalarda (özellikle <30 yaş) organ hasarı yapan dirençli hipertansiyonda ilk hedef renal (parankimal/vasküler) nedenleri dışlamaktır. <br><br><button onclick="document.getElementById('stage1').classList.remove('hidden'); document.getElementById('progressBar').style.width = '50%'; this.style.display='none'; window.scrollTo({ top: document.getElementById('stage1').offsetTop, behavior: 'smooth' });">Laboratuvar Sonuçlarını İste ⬇</button></div>`;
+            } else if (val) {
+                updateScore(10);
+                msg.innerHTML = `<div class="error">❌ <b>Yanlış Hamle.</b> Esansiyel hipertansiyon veya psikojenik nedenler bu yaşta bu kadar ağır uç organ hasarı (akciğer ödemi) yapmaz. Daha organik, sekonder bir neden aramalıyız. (Skor -10)</div>`;
+            } else {
+                alert("Lütfen bir seçenek işaretleyin.");
+            }
+        }
+
+        function checkQ2() {
+            let val = document.getElementById("q2").value;
+            let msg = document.getElementById("msg2");
+            if(val === "B") {
+                msg.innerHTML = `<div class="success">✅ <b>Tam isabet!</b> Şiddetli hipokalemi ve hipertansiyon birlikteliğinde Renin ve Aldosteron düzeyleri tanıyı primer (sürrenal) ve sekonder (böbrek/damar) kaynaklı olarak ikiye ayıran altın anahtardır.<br><br><button onclick="document.getElementById('stage3').classList.remove('hidden'); document.getElementById('progressBar').style.width = '75%'; this.style.display='none'; window.scrollTo({ top: document.getElementById('stage3').offsetTop, behavior: 'smooth' });">Radyoloji ve Hormon Sonuçlarını Gör ⬇</button></div>`;
+            } else if (val === "A") {
+                updateScore(10);
+                msg.innerHTML = `<div class="error">❌ <b>Erken bir adım.</b> Feokromositoma da sekonder HT yapar ancak belirgin hipokalemi Feokromositoma'nın klasik bulgusu değildir. RAAS aksına odaklanmalıyız. (Skor -10)</div>`;
+            } else if (val === "C") {
+                updateScore(10);
+                msg.innerHTML = `<div class="error">❌ <b>Çok invaziv!</b> Henüz kan testleriyle biyokimyasal tanıyı daraltmadık. Renal biyopsi bu aşamada gereksiz bir risktir. (Skor -10)</div>`;
+            } else {
+                alert("Lütfen bir tetkik seçin.");
+            }
+        }
+
+        function checkQ3() {
+            let val = document.querySelector('input[name="q3"]:checked');
+            let msg = document.getElementById("msg3");
+            if(val && val.value === "C") {
+                msg.innerHTML = `<div class="success">✅ <b>Mükemmel Teşhis!</b> Genç kadın + Yüksek Renin + Açık renal arterler + Soliter böbrek kitlesi = Jukstaglomerüler Hücreli Tümör (Reninoma). <br><br><button onclick="document.getElementById('stage4').classList.remove('hidden'); document.getElementById('progressBar').style.width = '100%'; document.getElementById('finalScoreDisplay').innerText = score; this.style.display='none'; window.scrollTo({ top: document.getElementById('stage4').offsetTop, behavior: 'smooth' });">Ameliyat Sonucunu Gör ⬇</button></div>`;
+            } else if (val) {
+                updateScore(15);
+                msg.innerHTML = `<div class="error">❌ <b>Dikkat!</b> RCC veya Feo nadiren renin salgılayabilir, ancak genç yaşta ve bu kadar spesifik bir endokrin profilde primer renin salgılayan benign tümör (Reninoma) asıl düşünülmesi gerekendir. (Skor -15)</div>`;
+            } else {
+                alert("Lütfen son kararınızı verin.");
+            }
+        }
+    </script>
 </body>
 </html>
